@@ -1,1 +1,92 @@
+import time, random, pygame
 
+# Initialize pygame mixer
+pygame.mixer.init()
+
+#Sound effects
+bang_sound = pygame.mixer.Sound("bang.mp3")  
+click_sound = pygame.mixer.Sound("click.mp3") 
+spin_sound = pygame.mixer.Sound("spinsound.mp3") 
+wasted_sound = pygame.mixer.Sound("wasted.mp3") 
+
+# Background music
+pygame.mixer.music.load("background.mp3")
+pygame.mixer.music.set_volume(0.1)# Load your background music file
+pygame.mixer.music.play(-1)  # Play the music indefinitely (-1 means loop forever)
+
+def intro():
+    time.sleep(0.25)
+    print("What's your name, Sir?")
+    time.sleep(0.25)
+    name = input(": ")
+    time.sleep(0.6)
+    print(f"Alright {name}, Welcome To Russian Roulette!")
+    time.sleep(1)
+    print("Let me introduce the rules...")
+    time.sleep(1.5)
+    print("We will load a single bullet in the revolver ont the table,")
+    time.sleep(3)
+    print("And then each round we will shot ourselves with it...")
+    time.sleep(3)
+    print("See who can survive till the end...")
+    time.sleep(2)
+    russian_roulette(name)
+
+def russian_roulette(player_name):
+    chambers = [0, 0, 0, 0, 0, 1]
+    random.shuffle(chambers)
+    spin_sound.play()
+    time.sleep(3)
+    print("*The revolver is loaded and spun.*")
+    time.sleep(1.5)
+
+    while True:
+        print(f"\n{player_name}'s turn...")
+        time.sleep(1)
+        result = chambers.pop(0)
+        time.sleep(1)
+
+        if result == 1:
+            time.sleep(1)
+            bang_sound.play()  
+            print("Bang! You are dead!")
+            wasted_sound.play()
+            print("WASTED")
+            time.sleep(2)
+            break
+        else:
+            click_sound.play() 
+            time.sleep(2.25)
+            print("Click! You're safe!")
+            time.sleep(3)
+
+        if not chambers:
+            print("All chambers have been fired without a bullet. You survived!")
+            break
+
+        print("\nOpponent's turn...")
+        time.sleep(1)
+        result = chambers.pop(0)
+        time.sleep(1)
+
+        if result == 1:
+            time.sleep(1)
+            bang_sound.play()  
+            print("Bang! Your opponent is dead!")
+            time.sleep(1)
+            print("YOU WIN!")
+            time.sleep(2)
+            break
+        else:
+            click_sound.play()  
+            time.sleep(2.25)
+            print("Click! Your opponent is safe!")
+            time.sleep(3)
+        if not chambers:
+            print("All chambers have been fired without a bullet. You survived!")
+            break
+
+intro()
+
+time.sleep(5)
+pygame.mixer.music.stop()
